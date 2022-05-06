@@ -14,6 +14,7 @@ class OnAddCategory extends SearchEvent {
   List<Object> get props => [category];
 }
 
-class OnRemoveCategory extends SearchEvent {}
-
-class OnSearchBtnPressed extends SearchEvent {}
+class OnRemoveCategory extends SearchEvent {
+  final int categoryId;
+  OnRemoveCategory(this.categoryId);
+}

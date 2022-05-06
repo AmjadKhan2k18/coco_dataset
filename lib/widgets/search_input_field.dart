@@ -14,7 +14,7 @@ class _SearchInputFieldState extends State<SearchInputField> {
   Widget build(BuildContext context) {
     final searchBloc = serviceLocator.get<SearchBloc>();
     return Container(
-      width: double.infinity,
+      // width: double.infinity,
       height: 50,
       decoration: BoxDecoration(
           color: Colors.grey.shade300, borderRadius: BorderRadius.circular(5)),

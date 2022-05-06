@@ -1,15 +1,13 @@
 import 'package:coco_dataset_testapp/blocs/categories/categories_bloc.dart';
 import 'package:coco_dataset_testapp/screens/loading.dart';
 import 'package:coco_dataset_testapp/screens/search/search_screen.dart';
+import 'package:coco_dataset_testapp/utils/http_requests.dart';
 import 'package:coco_dataset_testapp/utils/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  await HttpRequest.init();
   setUpLocator();
-  await dotenv.load(
-    fileName: ".env",
-  );
   runApp(const MyApp());
 }
 
@@ -19,8 +17,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       home: const Home(),
     );
@@ -42,17 +41,15 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<CategoriesState>(
-        stream: serviceLocator.get<CategoriesBloc>().stream,
-        builder: ((context, snapshot) {
-          if (!snapshot.hasData || snapshot.data is CategoriesLoading) {
-            return const OurCircularLoading();
-          }
+    return StreamBuilder<CategoriesState>(
+      stream: serviceLocator.get<CategoriesBloc>().stream,
+      builder: ((context, snapshot) {
+        if (!snapshot.hasData || snapshot.data is CategoriesLoading) {
+          return const OurCircularLoading();
+        }
 
-          return const SearchScreen();
-        }),
-      ),
+        return const SearchScreen();
+      }),
     );
   }
 }

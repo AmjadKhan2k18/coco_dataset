@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:coco_dataset_testapp/models/category.dart';
+import 'package:coco_dataset_testapp/models/image.dart';
 import 'package:coco_dataset_testapp/utils/http_requests.dart';
-import 'package:flutter/material.dart';
 
 class ApiProvider {
   static Future<List<Category>> fetchCategories() async {
-    final body = await HttpRequest.get(url: 'COCO EXPLORER URL');
+    final body = await HttpRequest.get();
 
     String superCatString = extractDataFromString(
       body: body,
@@ -31,19 +31,33 @@ class ApiProvider {
         tempCats.add(Category.fromJson(cat));
       });
     }
-
     return tempCats;
   }
 
-  static getImagesByCats(List<int> categoriesIds) async {
-    final response = await HttpRequest.post(
-      url: 'FUNCTION_URL',
+  static Future<List<int>> getImageIdsByCats(List<int> categoriesIds) async {
+    final body = await HttpRequest.post(
       data: {
-        "category_ids": categoriesIds.toString(),
-        "querytype": "getImagesByCats"
+        "category_ids": categoriesIds,
+        "querytype": "getImagesByCats",
       },
     );
-    debugPrint(response.toString());
+    if (body == null) return [];
+    return jsonDecode(body).cast<int>();
+  }
+
+  static Future<List<ImageModel>> getImages(List<int> imagesIds) async {
+    final body = await HttpRequest.post(
+      data: {
+        "image_ids": imagesIds,
+        "querytype": "getImages",
+      },
+    );
+
+    if (body == null) return [];
+    final decodedJson = jsonDecode(body);
+    List<ImageModel> images = [];
+    decodedJson.forEach((json) => images.add(ImageModel.fromJson(json)));
+    return images;
   }
 
   static extractDataFromString({
