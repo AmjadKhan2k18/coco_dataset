@@ -20,6 +20,10 @@ class CategoriesBloc extends Bloc<CategoriesEvent, CategoriesState> {
     on<LoadCategories>(_onLoadCategories);
   }
 
+  dispose() {
+    catStreamController.close();
+  }
+
   FutureOr<void> _onLoadCategories(
     LoadCategories event,
     Emitter<CategoriesState> emit,

@@ -9,41 +9,50 @@ class SelectedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Category>>(
-        stream: serviceLocator.get<SearchBloc>().selectedStream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return SizedBox(
-              width: double.maxFinite,
-              child: Wrap(
-                alignment: WrapAlignment.start,
-                spacing: 8,
-                children: snapshot.data!.map((e) => SelectedChip(e)).toList(),
-              ),
-            );
-          }
-          return const SizedBox();
-        });
+      stream: serviceLocator.get<SearchBloc>().selectedStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return SizedBox(
+            width: double.maxFinite,
+            child: Wrap(
+              alignment: WrapAlignment.start,
+              spacing: 8,
+              children: snapshot.data!
+                  .map(
+                    (category) => SelectedChip(category),
+                  )
+                  .toList(),
+            ),
+          );
+        }
+        return const SizedBox();
+      },
+    );
   }
 }
 
 class SelectedChip extends StatelessWidget {
-  final Category cat;
+  final Category category;
   const SelectedChip(
-    this.cat, {
+    this.category, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final searchBloc = serviceLocator.get<SearchBloc>();
     return Chip(
+      deleteIcon: const Icon(Icons.delete),
+      onDeleted: () => searchBloc.add(OnRemoveCategory(category.id)),
+      useDeleteButtonTooltip: true,
       avatar: CircleAvatar(
         radius: 10,
         backgroundColor: Colors.transparent,
         backgroundImage: NetworkImage(
-          'https://cocodataset.org/images/cocoicons/${cat.id}.jpg',
+          'https://cocodataset.org/images/cocoicons/${category.id}.jpg',
         ),
       ),
-      label: Text(cat.name),
+      label: Text(category.name),
     );
   }
 }

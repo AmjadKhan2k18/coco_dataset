@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:coco_dataset_testapp/blocs/categories/categories_bloc.dart';
 import 'package:coco_dataset_testapp/models/category.dart';
-import 'package:coco_dataset_testapp/utils/api_provider.dart';
 import 'package:coco_dataset_testapp/utils/locator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +25,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   Stream<List<Category>> get searchStream => searchStreamController.stream;
 
+  dispose() {
+    selectedStreamController.close();
+    searchStreamController.close();
+    searchController.dispose();
+  }
+
   SearchBloc() : super(SearchInitial()) {
     on<OnAddCategory>(_onAddCategory);
     on<OnRemoveCategory>(_onRemoveCategory);
-    on<OnSearchBtnPressed>(_onSearchBtnPressed);
   }
 
   FutureOr<void> _onAddCategory(
@@ -43,13 +47,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   }
 
   FutureOr<void> _onRemoveCategory(
-      OnRemoveCategory event, Emitter<SearchState> emit) {}
-
-  FutureOr<void> _onSearchBtnPressed(
-      OnSearchBtnPressed event, Emitter<SearchState> emit) {
-    final currentList = serviceLocator.get<SearchBloc>().state.props;
-    final currentIds = currentList.map((e) => e.id).toList();
-    ApiProvider.getImagesByCats(currentIds);
+    OnRemoveCategory event,
+    Emitter<SearchState> emit,
+  ) {
+    final cats = serviceLocator.get<SearchBloc>().state.props;
+    cats.removeWhere((category) => event.categoryId == category.id);
+    _selectedSink.add(cats);
+    emit(UpdatedCategory(cats));
   }
 
   void onSearchChange(String value) {
@@ -66,7 +70,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final currentIds = currentList.map((e) => e.id).toList();
       final searchCats = categories
           .where((element) =>
-              element.name.contains(value) && !currentIds.contains(element.id))
+              element.name.contains(value.toLowerCase()) &&
+              !currentIds.contains(element.id))
           .toList();
       _searchSink.add(searchCats);
     });

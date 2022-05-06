@@ -1,4 +1,5 @@
 import 'package:coco_dataset_testapp/blocs/categories/categories_bloc.dart';
+import 'package:coco_dataset_testapp/blocs/images/images_bloc.dart';
 import 'package:coco_dataset_testapp/blocs/search/search_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -9,10 +10,5 @@ void setUpLocator() {
     CategoriesBloc()..add(LoadCategories()),
   );
   serviceLocator.registerSingleton<SearchBloc>(SearchBloc());
-  // serviceLocator.registerSingleton<CountriesBloc>(
-  //   CountriesBloc()
-  //     ..add(
-  //       LoadCountries(),
-  //     ),
-  // );
+  serviceLocator.registerSingleton<ImagesBloc>(ImagesBloc());
 }
