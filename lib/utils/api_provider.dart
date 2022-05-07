@@ -46,17 +46,26 @@ class ApiProvider {
   }
 
   static Future<List<ImageModel>> getImages(List<int> imagesIds) async {
-    final body = await HttpRequest.post(
-      data: {
-        "image_ids": imagesIds,
-        "querytype": "getImages",
-      },
-    );
+    final responses = await Future.wait([
+      HttpRequest.post(
+          data: {"image_ids": imagesIds, "querytype": "getImages"}),
+      HttpRequest.post(
+          data: {"image_ids": imagesIds, "querytype": "getInstances"}),
+    ]);
 
-    if (body == null) return [];
-    final decodedJson = jsonDecode(body);
+    final decodedImagesJson = jsonDecode(responses[0] ?? '[]');
+    final decodedInstancesJson = jsonDecode(responses[1] ?? '[]');
+
+    List<ImageInstances> instances = [];
+    decodedInstancesJson
+        .forEach((json) => instances.add(ImageInstances.fromJson(json)));
+
     List<ImageModel> images = [];
-    decodedJson.forEach((json) => images.add(ImageModel.fromJson(json)));
+    decodedImagesJson.forEach((json) {
+      final tempInst =
+          instances.where((inst) => inst.imageId == json['id']).toList();
+      images.add(ImageModel.fromJson(json, tempInst));
+    });
     return images;
   }
 

@@ -4,7 +4,7 @@ abstract class ImagesState extends Equatable {
   const ImagesState();
 
   @override
-  List<ImageModel> get props => [];
+  List<Object> get props => [];
 }
 
 class ImagesInitial extends ImagesState {}
@@ -13,14 +13,7 @@ class ImageIdsLoading extends ImagesState {}
 
 class ImageIdsLoaded extends ImagesState {}
 
-class ImagesLoaded extends ImagesState {
-  final List<ImageModel> images;
-
-  const ImagesLoaded(this.images);
-
-  @override
-  List<ImageModel> get props => images;
-}
+class ImagesLoaded extends ImagesState {}
 
 class LoadingImages extends ImagesState {}
 
