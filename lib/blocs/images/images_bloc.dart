@@ -49,7 +49,7 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
     emit(LoadingImages());
     images = await loadingImages();
     _imagesSink.add(images);
-    emit(ImagesLoaded(images));
+    emit(ImagesLoaded());
   }
 
   Future<void> _onLoadMoreImages(
@@ -60,7 +60,7 @@ class ImagesBloc extends Bloc<ImagesEvent, ImagesState> {
     final _images = await loadingImages();
     images.addAll(_images);
     _imagesSink.add(images);
-    emit(ImagesLoaded(images));
+    emit(ImagesLoaded());
   }
 
   Future<List<ImageModel>> loadingImages() async {
