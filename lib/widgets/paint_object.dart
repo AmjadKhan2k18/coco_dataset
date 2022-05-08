@@ -71,7 +71,7 @@ class LinearPainter extends CustomPainter {
     for (var instance in instances) {
       final paint = Paint()
         ..color = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-            .withOpacity(0.9)
+            .withOpacity(0.7)
         ..style = PaintingStyle.fill;
       final path = Path();
       for (var k = 0; k < instance.segmentation.length; k++) {

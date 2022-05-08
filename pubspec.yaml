@@ -38,4 +38,5 @@ flutter:
 
   assets:
     - assets/.env
+    - assets/image.jpeg
 
