@@ -68,12 +68,11 @@ class LinearPainter extends CustomPainter {
   LinearPainter({required this.instances});
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
-          .withOpacity(1.0)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5;
     for (var instance in instances) {
+      final paint = Paint()
+        ..color = Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+            .withOpacity(0.9)
+        ..style = PaintingStyle.fill;
       final path = Path();
       for (var k = 0; k < instance.segmentation.length; k++) {
         var poly = instance.segmentation[k];
